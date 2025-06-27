@@ -1,0 +1,44 @@
+*{
+    margin:0 ;
+    padding: 0 ;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+html{
+    background-color:#6e6e6e;
+
+}
+#imagem{
+    width: 400px;
+    aspect-ratio: 11/17;
+    background: #f6f6f6;
+    background-image:url();
+    background-size:cover ;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: transparent;
+}
+
+#imagem::file-selector-button{
+    display:none;
+}
+
+form{
+    display: grid;
+    background-color: antiquewhite;
+    width: 800px;
+    margin:10vh 0vh 0vh 10vh;
+    display: flex;
+    align-items: flex-start;
+
+}
+
+@media (max-width: 768px){
+    form{
+        width: 80vw;
+        display: block;
+        margin: 0vh 0vh 0vh 0vh;
+        align-items: center;
+    }
+}
+
