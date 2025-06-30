@@ -206,6 +206,10 @@
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = `livro-${dados.titulo.replace(/\s+/g, '_')}.json`;
+
+        document.body.appendChild(link); // adiciona o link ao DOM (necessário no iOS)
+        link.click();
+        document.body.removeChild(link); // remove depois
         link.click();
 
         alert("Dados do livro baixados com sucesso!")
