@@ -35,7 +35,7 @@ form{
 
 @media (max-width: 768px){
     form{
-        width: 80vw;
+        width: 100vw;
         display: block;
         margin: 0vh 0vh 0vh 0vh;
         align-items: center;
