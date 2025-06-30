@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="addlivro.css">
+    <title>Document</title>
+</head>
+<body>
+    <main>
+        <form class="formulario" enctype="multipart/form-data">
+            <label><input type="file" id="imagem" name="imagem" accept="image/*" placeholder="image.png" required></label>
+
+            <section>
+                <input type="text" name="titulo" placeholder="Nome do livro" required><br>
+                <input type="number" name="paginas" placeholder="Nº de páginas" required><br>
+
+                <select aria-label="State" name="faixaEtaria" required>
+                  <option value="f" name="faixa" disabled selected>Faixa etária</option>
+                  <option value="L" name="l">L</option>
+                  <option value="10" name="10">10</option>
+                  <option value="12" name="12">12</option>
+                  <option value="14" name="14">14</option>
+                  <option value="16" name="16">16</option>
+                  <option value="18" name="18">18</option>
+                </select><br>
+
+                <input type="text" name="autor" placeholder="Autor" required><br>
+                <input type="text" name="tradutor" placeholder="Tradutor (opcional)"><br>
+                <input type="text" name="pais" placeholder="Nacionalidade (ex: Brasil)" required><br>
+
+                <textarea name="importanciaEstudos" placeholder="Texto de importância para o estudo" required></textarea><br>
+                <textarea name="importanciaLazer" placeholder="Texto de importância para o lazer" required></textarea><br>
+                <textarea name="sinopse" placeholder="Sinopse do livro" required></textarea><br>
+
+                <label class="el" >
+                  <input type="checkbox" name="estudoLazer" class="estudo" value="1"> É para estudo
+                </label><br>
+                <label>
+                  <input type="checkbox" name="estudoLazer" class="lazer" value="2"> É para lazer
+                </label><br>
+
+                <input type="number" name="nivelDificuldade" placeholder="Nível de dificuldade 1-100" required><br>
+                <textarea name="textoDificuldade" placeholder="Texto sobre a dificuldade" required></textarea><br>
+
+                <label><input type="date" name="dataLancamento" placeholder="data de lançamento" required></label><br><br>
+
+                <button type="submit">Enviar</button>
+            </section>
+        </form>
+    </main>
+
+
+    <script>
+        var imagem = document.querySelector("#imagem");
+        document.querySelector("#imagem").addEventListener("change" , (e) => {
+            const imgi = document.querySelector("#imagem").files[0];
+            e.preventDefault();
+
+            const imgi1 = URL.createObjectURL(imgi);
+            imagem.style.backgroundImage = 'url("'+imgi1+'")';
+            console.log(imgi);
+        })
+
+        /*---------------------------sistema para transformar criar um terceiro valor-------------------*/
+
+
+
+        
+
+
+
+
+
+
+        /*--------------------------------------sistema para download----------------------------------------*/
+
+
+  const form = document.querySelector(".formulario");
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+
+    let estudoC = document.querySelector(".estudo");
+    let lazerC = document.querySelector(".lazer");
+    let elValue = 0;
+
+    if(lazerC.checked && estudoC.checked) {elValue = 3;}
+    else if(lazerC.checked) {elValue = 2;}
+    else if(estudoC.checked){elValue = 1;}
+    else {
+      alert("Nenhuma caixa selecionada");
+    };
+
+
+
+    const arquivoImagem = form.imagem.files[0];
+
+
+
+    if (arquivoImagem) {
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        const base64Imagem = event.target.result;
+
+        const dados = {
+          titulo: form.titulo.value.trim(),
+          paginas: parseInt(form.paginas.value, 10),
+          faixaEtaria: form.faixaEtaria.value.trim(),
+          tradutor: form.tradutor.value.trim() || null,
+          importanciaEstudos: form.importanciaEstudos.value.trim(),
+          importanciaLazer: form.importanciaLazer.value.trim(),
+          sinopse: form.sinopse.value.trim(),
+          estudoLazer: elValue,
+          nivelDificuldade: parseInt(form.nivelDificuldade.value, 10),
+          textoDificuldade: form.textoDificuldade.value.trim(),
+          imagemBase64: base64Imagem,
+          dataLancamento: form.dataLancamento.value,
+          autor: form.autor.value.trim(),
+          pais: form.pais.value.trim()
+        };
+
+        // Salva como arquivo .json
+        const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `livro-${dados.titulo.replace(/\s+/g, '_')}.json`;
+        link.click();
+      };
+
+      reader.readAsDataURL(arquivoImagem);
+    } else {
+      alert("Por favor, selecione uma imagem.");
+    }
+
+  });
+    </script>
+
+
+
