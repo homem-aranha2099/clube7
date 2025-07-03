@@ -129,6 +129,7 @@
     <script>
 // Preview da imagem ao selecionar no input
 
+
 document.querySelector("#imagem").addEventListener("change", function (e) {
   const file = e.target.files[0];
 
@@ -149,22 +150,35 @@ document.querySelector("#imagem").addEventListener("change", function (e) {
 // Submit do formulário
 const form = document.querySelector("#formulario");
 
-
-form.addEventListener("submit", function (e) {
+form.addEventListener("submit", function(e) {
   e.preventDefault();
 
+  // Pegando a imagem
+  const arquivoImagem = form.imagem.files[0];
+  if (!arquivoImagem) {
+    alert("Selecione uma imagem");
+    return;
+  }
+
+  // Determinar valor de estudoLazer
+  let elValue = 0;
   const estudoC = document.querySelector("#estudo");
   const lazerC = document.querySelector("#lazer");
-  let elValue = 0;
-
   if (lazerC.checked && estudoC.checked) elValue = 3;
   else if (lazerC.checked) elValue = 2;
   else if (estudoC.checked) elValue = 1;
-  else {alert("Selecione pelo menos uma opção: estudo ou lazer.");return;}
+  else {
+    alert("Selecione pelo menos estudo ou lazer");
+    return;
+  }
 
-    const form = event.target;
-    const base64Imagem = event.target.result;
+  // Iniciar FileReader
+  const reader = new FileReader();
 
+  reader.onload = function(event) {
+    const base64Imagem = event.target.result; // Aqui a imagem já está em base64
+
+    // Montar os dados
     const dados = {
       titulo: form.titulo.value.trim(),
       paginas: parseInt(form.paginas.value, 10),
@@ -181,18 +195,26 @@ form.addEventListener("submit", function (e) {
       autor: form.autor.value.trim(),
       pais: form.pais.value.trim()
     };
-      const jsonString = JSON.stringify(dados, null, 2);
-      const blob = new Blob([jsonString], {type: "application/json"});
 
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = dados.titulo + ".json";
-      a.click();
+    // Converter em JSON e gerar blob
+    const jsonString = JSON.stringify(dados, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
 
-      URL.revokeObjectURL(url);
-      })
-;
+    // Criar link para download
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
+    a.click();
+
+    // Limpar da memória
+    URL.revokeObjectURL(url);
+  };
+
+  // Iniciar leitura do arquivo (isso dispara o onload acima)
+  reader.readAsDataURL(arquivoImagem);
+});
+
 
 
 
