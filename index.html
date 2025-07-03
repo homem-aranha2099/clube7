@@ -205,8 +205,10 @@ form.addEventListener("submit", function(e) {
     const a = document.createElement("a");
     a.href = url;
     a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
+    a.textContent = "download";
+    form.appendChild(a);
     a.click();
-
+    form.removeChild(a);
 
     // Limpar da memória
     URL.revokeObjectURL(url);
@@ -214,6 +216,9 @@ form.addEventListener("submit", function(e) {
 
   // Iniciar leitura do arquivo (isso dispara o onload acima)
   reader.readAsDataURL(arquivoImagem);
+
+
+
 });
 
 
