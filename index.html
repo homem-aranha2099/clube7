@@ -206,9 +206,9 @@ form.addEventListener("submit", function(e) {
     a.href = url;
     a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
     a.textContent = "download";
+    a.className = "btn btn-primary w-100";
     form.appendChild(a);
     a.click();
-    form.removeChild(a);
 
     // Limpar da memória
     URL.revokeObjectURL(url);
