@@ -201,14 +201,18 @@ form.addEventListener("submit", function(e) {
     const blob = new Blob([jsonString], { type: "application/json" });
 
     // Criar link para download
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
-    a.click();
+    setTimeout(() => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
+      document.body.appendChild("a");
+      a.click();
+      document.body.removeChild("a");
 
-    // Limpar da memória
-    URL.revokeObjectURL(url);
+      // Limpar da memória
+      URL.revokeObjectURL(url);
+  },100)
   };
 
   // Iniciar leitura do arquivo (isso dispara o onload acima)
