@@ -117,6 +117,8 @@
 
               <!-- Botão -->
               <button type="submit" class="btn btn-primary w-100">Enviar</button>
+              <br><br>
+              <button type="button" id="baixar" disabled class="btn btn-primary w-100">se o download não for iniciado clique aqui</button>
             </form>
           </div>
         </div>
@@ -172,6 +174,9 @@ form.addEventListener("submit", function(e) {
     return;
   }
 
+  let jsonString = null;
+  let dados = null;
+
   // Iniciar FileReader
   const reader = new FileReader();
 
@@ -179,7 +184,7 @@ form.addEventListener("submit", function(e) {
     const base64Imagem = event.target.result; // Aqui a imagem já está em base64
 
     // Montar os dados
-    const dados = {
+    dados = {
       titulo: form.titulo.value.trim(),
       paginas: parseInt(form.paginas.value, 10),
       faixaEtaria: form.faixaEtaria.value.trim(),
@@ -198,27 +203,37 @@ form.addEventListener("submit", function(e) {
 
 
     // Converter em JSON e gerar blob
-    const jsonString = JSON.stringify(dados, null, 2);
-    const blob = new Blob([jsonString], { type: "application/json" });
+    jsonString = new Blob([ JSON.stringify(dados, null, 2)], {
+      type: "application/json",
+    });
 
-    // Criar link para download
-    setTimeout(() => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
-      a.textContent = "download";
-      a.className = "btn btn-primary w-100";
-      form.appendChild(a);
-      a.click();
+    document.getElementById("baixar").disabled = false;
 
-      
+    const url = URL.createObjectURL(jsonString);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
+    a.click();
 
-  }, 100)
+    URL.revokeObjectURL(url);
+
+
     };
 
   // Iniciar leitura do arquivo (isso dispara o onload acima)
   reader.readAsDataURL(arquivoImagem);
+
+  document.querySelector("#baixar").addEventListener("click", () => {
+      const url = URL.createObjectURL(jsonString);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
+      form.appendChild(a);
+      a.click();
+      form.replaceChild(a);
+
+      URL.revokeObjectURL(url);
+  });
 
 
 
