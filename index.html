@@ -116,7 +116,7 @@
               </div>
 
               <!-- Botão -->
-              <button type="submit" class="btn btn-primary w-100">BAIXAR</button>
+              <button type="submit" class="btn btn-primary w-100">ENVIAR</button>
               <br><br>
               <button style="display:none;" type="button" id="baixar" class="btn btn-primary w-100">BAIXAR (para celular)</button>
             </form>
@@ -128,144 +128,109 @@
 
 
 
-    <script>
-// Preview da imagem ao selecionar no input
+<script>
+  const form = document.querySelector("#formulario");
+  const botaoDownload = document.getElementById("baixar");
+  const imagemInput = document.getElementById("imagem");
+  const preview = document.querySelector("#previewImagem");
 
-
-document.querySelector("#imagem").addEventListener("change", function (e) {
-  const file = e.target.files[0];
-
-  if (file) {
-    const previewReader = new FileReader(); // reader só para a pré-visualização
-
-    previewReader.onload = function (event) {
-      const preview = document.querySelector("#previewImagem");
-      preview.src = event.target.result;
-      preview.classList.remove("d-none");
-    };
-
-    previewReader.readAsDataURL(file);
-  }
-});
-
-
-// Submit do formulário
-const form = document.querySelector("#formulario");
-
-form.addEventListener("submit", function(e) {
-  e.preventDefault();
-
-  // Pegando a imagem
-  const arquivoImagem = form.imagem.files[0];
-  if (!arquivoImagem) {
-    alert("Selecione uma imagem");
-    return;
-  }
-
-  // Determinar valor de estudoLazer
-  let elValue = 0;
-  const estudoC = document.querySelector("#estudo");
-  const lazerC = document.querySelector("#lazer");
-  if (lazerC.checked && estudoC.checked) elValue = 3;
-  else if (lazerC.checked) elValue = 2;
-  else if (estudoC.checked) elValue = 1;
-  else {
-    alert("Selecione pelo menos estudo ou lazer");
-    return;
-  }
-
-  let jsonString = null;
+  let blobUrl = null;
   let dados = null;
 
-  // Iniciar FileReader
-  const reader = new FileReader();
-
-  reader.onload = function(event) {
-    const base64Imagem = event.target.result; // Aqui a imagem já está em base64
-
-    // Montar os dados
-    dados = {
-      titulo: form.titulo.value.trim(),
-      paginas: parseInt(form.paginas.value, 10),
-      faixaEtaria: form.faixaEtaria.value.trim(),
-      tradutor: form.tradutor.value.trim() || null,
-      importanciaEstudos: form.importanciaEstudos.value.trim(),
-      importanciaLazer: form.importanciaLazer.value.trim(),
-      sinopse: form.sinopse.value.trim(),
-      estudoLazer: elValue,
-      nivelDificuldade: parseInt(form.nivelDificuldade.value, 10),
-      textoDificuldade: form.textoDificuldade.value.trim(),
-      imagemBase64: base64Imagem,
-      dataLancamento: form.dataLancamento.value,
-      autor: form.autor.value.trim(),
-      pais: form.pais.value.trim()
-    };
-
-    // Converter em JSON e gerar blob
-    jsonString = new Blob([ JSON.stringify(dados, null, 2)], {
-      type: "application/json",
-    });
-
-      const url = URL.createObjectURL(jsonString);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
-      a.className = "a";
-      form.appendChild(a);
-      a.click();
-      form.replaceChild(a);
-
-      URL.revokeObjectURL(url);
-
-    };
-
-  // Iniciar leitura do arquivo (isso dispara o onload acima)
-  reader.readAsDataURL(arquivoImagem);
-  const botao00 = document.getElementById("baixar");
-  botao00.style.display = "block";
- 
-
-    
-
-  document.querySelector("#baixar").addEventListener("click", () => {
-
-      const url = URL.createObjectURL(jsonString);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
-      a.className = "a";
-      form.appendChild(a);
-      a.click();
-      form.replaceChild(a);
-
-      URL.revokeObjectURL(url);
+  imagemInput.addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    if (file) {
+      const previewReader = new FileReader();
+      previewReader.onload = function (event) {
+        preview.src = event.target.result;
+        preview.classList.remove("d-none");
+      };
+      previewReader.readAsDataURL(file);
+    }
   });
 
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
 
+    const arquivoImagem = imagemInput.files[0];
+    if (!arquivoImagem) {
+      alert("Selecione uma imagem");
+      return;
+    }
 
-  
+    let elValue = 0;
+    const estudoC = document.querySelector("#estudo");
+    const lazerC = document.querySelector("#lazer");
 
+    if (estudoC.checked && lazerC.checked) elValue = 3;
+    else if (lazerC.checked) elValue = 2;
+    else if (estudoC.checked) elValue = 1;
+    else {
+      alert("Selecione pelo menos estudo ou lazer");
+      return;
+    }
 
+    const reader = new FileReader();
 
-});
+    reader.onload = function (event) {
+      const base64Imagem = event.target.result;
 
+      dados = {
+        titulo: form.titulo.value.trim(),
+        paginas: parseInt(form.paginas.value, 10),
+        faixaEtaria: form.faixaEtaria.value.trim(),
+        tradutor: form.tradutor.value.trim() || null,
+        importanciaEstudos: form.importanciaEstudos.value.trim(),
+        importanciaLazer: form.importanciaLazer.value.trim(),
+        sinopse: form.sinopse.value.trim(),
+        estudoLazer: elValue,
+        nivelDificuldade: parseInt(form.nivelDificuldade.value, 10),
+        textoDificuldade: form.textoDificuldade.value.trim(),
+        imagemBase64: base64Imagem,
+        dataLancamento: form.dataLancamento.value,
+        autor: form.autor.value.trim(),
+        pais: form.pais.value.trim(),
+      };
 
+      // Revogar URL antiga se existir
+      if (blobUrl) {
+        URL.revokeObjectURL(blobUrl);
+      }
 
+      const blob = new Blob([JSON.stringify(dados, null, 2)], {
+        type: "application/json",
+      });
 
+      blobUrl = URL.createObjectURL(blob);
 
+      // Mostrar botão de download
+      botaoDownload.style.display = "block";
+      botaoDownload.disabled = false;
+      alert("JSON pronto para download. Clique no botão.");
+    };
 
-            
+    reader.readAsDataURL(arquivoImagem);
+  });
 
+  botaoDownload.addEventListener("click", function () {
+    if (!blobUrl || !dados) {
+      alert("Envie o formulário primeiro.");
+      return;
+    }
 
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 
+    // Opcional: revogar a URL após download
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+  });
+</script>
 
-
-
-        /*--------------------------------------sistema para download----------------------------------------*/
-
-
-
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
