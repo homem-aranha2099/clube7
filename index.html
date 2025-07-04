@@ -209,15 +209,6 @@ form.addEventListener("submit", function(e) {
 
     document.getElementById("baixar").disabled = false;
 
-    const url = URL.createObjectURL(jsonString);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-
     };
 
   // Iniciar leitura do arquivo (isso dispara o onload acima)
