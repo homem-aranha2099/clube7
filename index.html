@@ -116,9 +116,9 @@
               </div>
 
               <!-- Botão -->
-              <button type="submit" class="btn btn-primary w-100">Enviar</button>
+              <button type="submit" class="btn btn-primary w-100">BAIXAR</button>
               <br><br>
-              <button type="button" id="baixar" disabled class="btn btn-primary w-100">se o download não for iniciado clique aqui</button>
+              <button style="display:none;" type="button" id="baixar" class="btn btn-primary w-100">BAIXAR (para celular)</button>
             </form>
           </div>
         </div>
@@ -201,24 +201,39 @@ form.addEventListener("submit", function(e) {
       pais: form.pais.value.trim()
     };
 
-
     // Converter em JSON e gerar blob
     jsonString = new Blob([ JSON.stringify(dados, null, 2)], {
       type: "application/json",
     });
 
-    document.getElementById("baixar").disabled = false;
+      const url = URL.createObjectURL(jsonString);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
+      a.className = "a";
+      form.appendChild(a);
+      a.click();
+      form.replaceChild(a);
+
+      URL.revokeObjectURL(url);
 
     };
 
   // Iniciar leitura do arquivo (isso dispara o onload acima)
   reader.readAsDataURL(arquivoImagem);
+  const botao00 = document.getElementById("baixar");
+  botao00.style.display = "block";
+ 
+
+    
 
   document.querySelector("#baixar").addEventListener("click", () => {
+
       const url = URL.createObjectURL(jsonString);
       const a = document.createElement("a");
       a.href = url;
       a.download = `livro-${dados.titulo.replace(/\s+/g, "_")}.json`;
+      a.className = "a";
       form.appendChild(a);
       a.click();
       form.replaceChild(a);
