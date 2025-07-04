@@ -196,6 +196,7 @@ form.addEventListener("submit", function(e) {
       pais: form.pais.value.trim()
     };
 
+
     // Converter em JSON e gerar blob
     const jsonString = JSON.stringify(dados, null, 2);
     const blob = new Blob([jsonString], { type: "application/json" });
@@ -210,15 +211,18 @@ form.addEventListener("submit", function(e) {
       a.className = "btn btn-primary w-100";
       form.appendChild(a);
       a.click();
-      form.removeChild(a);
 
-      // Limpar da memória
-      URL.revokeObjectURL(url);
+      
+
   }, 100)
     };
 
   // Iniciar leitura do arquivo (isso dispara o onload acima)
   reader.readAsDataURL(arquivoImagem);
+
+
+
+  
 
 
 
