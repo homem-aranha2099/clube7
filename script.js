@@ -62,7 +62,9 @@ form.addEventListener("submit", async function(e) {
       pais: form.pais.value.trim()
     };
 
-    botao.disabled = false;
+  btn.disabled = true;
+  btn.classList.remove("btn-primary");
+  btn.classList.add("btn-dark");
 
     // Converter em JSON e gerar blob
   });
