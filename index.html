@@ -145,19 +145,41 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
 // Preview da imagem ao selecionar no input
+const imagemInput = document.querySelector("#imagem");
+const preview = document.querySelector("#previewImagem");
 
-document.querySelector("#imagem").addEventListener("input", function (e) {
-  const url = e.target.value.trim();
-  const preview = document.querySelector("#previewImagem");
+if (window.innerWidth > 768) {
+  // Desktop: preview de arquivo
+  imagemInput.addEventListener("change", function (e) {
+    const file = e.target.files[0];
 
-  if (url.startsWith("http")) {
-    preview.src = url;
-    preview.classList.remove("d-none");
-  } else {
-    preview.classList.add("d-none");
-    preview.src = "";
-  }
-});
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        preview.src = event.target.result;
+        preview.classList.remove("d-none");
+      };
+
+      reader.readAsDataURL(file);
+    }
+  });
+} else {
+  // Celular: preview de URL digitada
+  imagemInput.addEventListener("input", function (e) {
+    const url = e.target.value.trim();
+
+    if (url.startsWith("http")) {
+      preview.src = url;
+      preview.classList.remove("d-none");
+    } else {
+      preview.src = "";
+      preview.classList.add("d-none");
+    }
+  });
+}
+
+
     </script>
     <script type="module" src="script.js"></script>
 </body>
