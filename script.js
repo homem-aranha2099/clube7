@@ -50,6 +50,7 @@ const montDados = function (base64Imagem, elValue) {
 
 /*--------- Só roda em telas maiores ----------*/
 if (window.innerWidth > 768) {
+
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
@@ -74,10 +75,15 @@ if (window.innerWidth > 768) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   });
 }else{
+  const hidden = document.querySelector(".notAviso");
+  hidden.classList.remove("hidden");
+
   const imagemInput = document.getElementById("imagem");
+  const aviso = document.querySelector(".aviso");
   
   imagemInput.type = "url"; // altera o tipo do campo no celular
-  imagemInput.placeholder = "Copie o link da imagem da internet e cole aqui."
+  imagemInput.placeholder = "Copie o ENDEREÇO da imagem da internet e cole aqui.";
+  
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
